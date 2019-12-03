@@ -14,8 +14,11 @@ ds = quandl.get('WIKI/GOOGL')
 #print(ds.head())
 
 ds = ds[['Adj. Open','Adj. High','Adj. Low','Adj. Close','Adj. Volume']]
+
 ds ['HL_PCT'] = (ds['Adj. High'] - ds['Adj. Close'] ) / ds['Adj. Close'] * 100.0
+
 ds ['CHANGE_PCT'] = (ds['Adj. Close'] - ds['Adj. Open'] ) / ds['Adj. Open'] * 100.0
+
 
 ds = ds[['Adj. Close','HL_PCT','CHANGE_PCT','Adj. Volume']]
 
@@ -27,14 +30,14 @@ forecast_col = 'Adj. Close'
 ds.fillna(-99999,inplace=True)
 
 # we use ten days (ten percent in this case only) to predict the proce of today
-forecast_out = int(math.ceil(0.01*len(ds)))
+forecast_out = int(math.ceil(0.1*len(ds)))
 
 ds['label'] = ds[forecast_col].shift(-forecast_out)
 
 
 #print(ds.head())
 
-x = np.array(ds.drop(['label'],1))
+x = np.array(ds.drop(['label','Adj Close'],1))
 
 #scale based on all data
 x = preprocessing.scale(x)
